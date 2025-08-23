@@ -65,15 +65,16 @@ class VoidCube{
 
         GLuint LoadTexture(){
             int w , h ,c;
-            unsigned char *data = stbi_load("../images/Wooden_Shovel_JE2_BE2.png", &w, &h, &c, 0);
+            unsigned char *data = stbi_load("images/dirt.png", &w, &h, &c, 0);
             GLuint Texture;
             glGenTextures(1, &Texture);
             glBindTexture(GL_TEXTURE_2D, Texture);
            
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-           
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,w,h,0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            
+            int alpha = (c == 4) ? GL_RGBA : GL_RGB;
+            glTexImage2D(GL_TEXTURE_2D, 0, alpha,w,h,0, alpha, GL_UNSIGNED_BYTE, data);
            
             stbi_image_free(data);
             return Texture;
@@ -103,7 +104,7 @@ class VoidCube{
 
 int main(){
     if(!glfwInit()) return EXIT_FAILURE;
-    GLFWwindow *ventana = glfwCreateWindow(300, 600, "HOLA", NULL, NULL);
+    GLFWwindow *ventana = glfwCreateWindow(300, 600, "Main Title", NULL, NULL);
     if(ventana){
         VoidCube Cube;
         glfwMakeContextCurrent(ventana);
@@ -113,7 +114,7 @@ int main(){
             glEnable(GL_DEPTH);
             glEnable(GL_CULL_FACE);
             glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
             Cube.InitTexture();
             Cube.ShowCube();
