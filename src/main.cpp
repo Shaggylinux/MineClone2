@@ -63,9 +63,9 @@ class VoidCube{
             TexCoords = _TextCoords;
         };
 
-        GLuint LoadTexture(){
+        GLuint LoadTexture(std::string FileName){
             int w , h ,c;
-            unsigned char *data = stbi_load("images/dirt.png", &w, &h, &c, 0);
+            unsigned char *data = stbi_load(FileName.c_str(), &w, &h, &c, 0);
             GLuint Texture;
             glGenTextures(1, &Texture);
             glBindTexture(GL_TEXTURE_2D, Texture);
@@ -81,8 +81,8 @@ class VoidCube{
         }
 
         GLuint Texture;
-        void InitTexture(){
-            Texture = LoadTexture();
+        void InitTexture(std::string Filename){
+            Texture = LoadTexture(Filename);
         }
         
         void ShowCube(){
@@ -116,7 +116,7 @@ int main(){
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            Cube.InitTexture();
+            Cube.InitTexture("images/dirt.png");
             Cube.ShowCube();
             
             glfwSwapBuffers(ventana);
