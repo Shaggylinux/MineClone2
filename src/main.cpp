@@ -103,7 +103,10 @@ class VoidCube{
 };
 
 int main(){
-    if(!glfwInit()) return EXIT_FAILURE;
+    if(!glfwInit()){
+        std::cout << "Error to load OpenGL\n";
+        return EXIT_FAILURE;
+    };
     GLFWwindow *ventana = glfwCreateWindow(300, 600, "Main Title", NULL, NULL);
     if(ventana){
         VoidCube Cube;
@@ -123,6 +126,7 @@ int main(){
             glfwPollEvents();
         } 
     } else {
+        std::cout << "Error to load Windows" << ventana << "\n";
         return EXIT_FAILURE;
     }
     glfwTerminate();
