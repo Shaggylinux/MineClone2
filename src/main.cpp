@@ -1,14 +1,54 @@
-#include <GL/gl.h>
-#include <GLFW/glfw3.h>
 #include <vector>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <cstdio> 
 #include <string> 
+#include <GL/gl.h>
+#include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-void MainViewport(GLFWwindow*ventana, int w, int h){
-    glViewport(0, 0, w, h);
+void MainViewport(GLFWwindow *ventana, int w, int h){
+    glViewport(0, -64, w, h);
 }
+
+class VoidPlayer{
+    private:
+        struct Coors{
+            float x, y , z;
+        };
+        float velocity;
+        float rotation;
+        glm::vec3 CameraPos = glm::vec3(0.f, 0.f, 3.f);
+        glm::vec3 CameraFront = glm::vec3(0.f, 0.f, -1.f);
+        glm::vec3 CameraUP = glm::vec3(0.f, 1.f, 0.f);
+        glm::mat4 view = glm::lookAt(
+            CameraPos,
+            CameraPos + CameraFront,
+            CameraUP
+        );
+    public:
+        VoidPlayer() = default;
+        
+        void PlayerInput(GLFWwindow *ventana, int key, int scancode, int action, int mods){
+            switch (key) {
+            case GLFW_KEY_W:
+                
+                break;
+            case GLFW_KEY_A:
+                break;
+            case GLFW_KEY_S:
+                break;
+            case GLFW_KEY_D:
+                break;
+            case GLFW_KEY_SPACE:
+                break;
+
+            default:
+                break;
+            }
+        }
+};
 
 class VoidCube{
     private:
