@@ -10,13 +10,14 @@ class VoidCube{
         struct Coordenadas{
             float x, y, z;
         };
+        
         std::vector<Coordenadas> Cube;
         std::vector<float> TexCoords
-                {1.0f, 1.0f,
-                1.0f, 0.0f,
-                0.0f, 0.0f,
-                0.0f, 1.0f};
-        float r; 
+            {1.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f};
+
     public:
         VoidCube(){
             Cube = {
@@ -54,13 +55,7 @@ class VoidCube{
             {1.0f, 1.0f, 1.0f},
             {1.0f, -1.0f, 1.0f},
             {1.0f, -1.0f, -1.0f}
-            },
-            r = 0.0f;
-        };
-
-        VoidCube(std::vector<Coordenadas> _Cube,std::vector<float> _TextCoords){
-            Cube = _Cube;
-            TexCoords = _TextCoords;
+            };
         };
 
         GLuint LoadTexture(std::string FileName){
@@ -85,48 +80,77 @@ class VoidCube{
             Texture = LoadTexture(Filename);
         }
         
-        void ShowCube(){
-            r += 1.0f;
+        void ShowCube(float R, float x, float y, float z){
             glPushMatrix();
-            glRotatef(r, 1.0f, 1.0f, 1.0f);
+            glTranslatef(x,y,z);
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, Texture);
             glBegin(GL_QUADS);
+            
             for(int i{0} ; i < Cube.size() ; i++) {
-                glTexCoord2f(TexCoords[i % 4 * 2], TexCoords[i % 4 * 2+1]);
-                glVertex3f(Cube[i].x / 4,Cube[i].y / 4, Cube[i].z / 4);
+                glTexCoord2f(TexCoords[i % 4 * 2], TexCoords[i % 4 * 2 + 1]);
+                glVertex3f(Cube[i].x / 9,Cube[i].y / 9, Cube[i].z / 9);
             };
+            
             glDisable(GL_TEXTURE_2D);
             glEnd();
             glPopMatrix();
         }
 };
 
+class VoidChunk{
+    private:
+        VoidCube Cube;
+        VoidCube *ptrCube = &Cube;
+        std::string DirtTexture = "images/dirt.png";
+        float rotate;
+    public:
+        void LoadChunk(float R,float x, float y, float z){
+            rotate += 0.1f;
+            glPushMatrix();
+            glRotatef(rotate * R, 0.0f, 1.0f, 0.0f);
+            ptrCube -> InitTexture(DirtTexture);
+            for(float x{0} ; x < 16 ; x++){
+                for(float y{0} ; y < 16 ; y++){
+                    for(float z{0} ; z < 16 ; z++){
+                        ptrCube -> ShowCube(1.0f, x / 4.5f, y / 4.5f, z / 4.5f);
+                    }
+                }
+            }
+            glPopMatrix();
+        }
+};
+
 int main(){
+    if (strcmp(getenv("XDG_CURRENT_DESKTOP"), "GNOME") == 0) glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+    else glfwInitHint(GLFW_PLATFORM, GLFW_ANY_PLATFORM);
+    
     if(!glfwInit()){
-        std::cout << "Error to load OpenGL\n";
+        std::cout << "Error : Load OpenGL.\n";
         return EXIT_FAILURE;
     };
-    GLFWwindow *ventana = glfwCreateWindow(300, 600, "Main Title", NULL, NULL);
+
+    GLFWwindow *ventana = glfwCreateWindow(300, 600, "Test", NULL, NULL);
+    
     if(ventana){
-        VoidCube Cube;
+        VoidChunk Chunk;
         glfwMakeContextCurrent(ventana);
         while(!glfwWindowShouldClose(ventana)){
             glClearColor(1.0f, 0.5f, 0.3f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glEnable(GL_DEPTH);
+            glEnable(GL_DEPTH_TEST);
             glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            Cube.InitTexture("images/dirt.png");
-            Cube.ShowCube();
+            Chunk.LoadChunk(5.0f, 0.2f, 0.2f, 0.4f);
             
             glfwSwapBuffers(ventana);
             glfwPollEvents();
         } 
     } else {
-        std::cout << "Error to load Windows" << ventana << "\n";
+        std::cout << "Error : Load Window." << ventana << "\n";
         return EXIT_FAILURE;
     }
     glfwTerminate();
