@@ -6,6 +6,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+void MainViewport(GLFWwindow*ventana, int w, int h){
+    glViewport(0, 0, w, h);
+}
+
 class VoidCube{
     private:
         struct Coordenadas{
@@ -135,6 +139,7 @@ int main(){
     GLFWwindow *ventana = glfwCreateWindow(300, 600, "Test", NULL, NULL);
     
     if(ventana){
+        glfwSetFramebufferSizeCallback(ventana,MainViewport);
         glfwMakeContextCurrent(ventana);
         VoidChunk Chunk;
         while(!glfwWindowShouldClose(ventana)){
