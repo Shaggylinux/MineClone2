@@ -38,7 +38,6 @@ class VoidPlayer{
             camX = sin(glfwGetTime()) * 10.0f;
             camY = cos(glfwGetTime()) * 10.0f;
             view = glm::lookAt(glm::vec3(camX, 0.0f, camY), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-            printf("HOLA");
             glMatrixMode(GL_MODELVIEW);
             glLoadMatrixf(&view[0][0]);
 
