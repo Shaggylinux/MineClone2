@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -30,22 +31,27 @@ class VoidPlayer{
     public:
         VoidPlayer() = default;
         
-        void PlayerInput(GLFWwindow *ventana, int key, int scancode, int action, int mods){
+        static void PlayerInput(GLFWwindow *ventana, int key, int scancode, int action, int mods){
             switch (key) {
-            case GLFW_KEY_W:
-                
-                break;
-            case GLFW_KEY_A:
-                break;
-            case GLFW_KEY_S:
-                break;
-            case GLFW_KEY_D:
-                break;
-            case GLFW_KEY_SPACE:
-                break;
-
-            default:
-                break;
+                case GLFW_KEY_W:
+                    puts("W");
+                    break;
+                case GLFW_KEY_A:
+                    puts("A");
+                    break;
+                case GLFW_KEY_S:
+                    puts("S");
+                    break;
+                case GLFW_KEY_D:
+                    puts("D");
+                    break;
+                case GLFW_KEY_SPACE:
+                    puts("ESPACIO");
+                    break;
+                case GLFW_KEY_ESCAPE:
+                    puts("Cerrar juego");
+                    glfwTerminate();
+                    break;
             }
         }
 };
@@ -179,6 +185,7 @@ int main(){
     GLFWwindow *ventana = glfwCreateWindow(300, 600, "Test", NULL, NULL);
     
     if(ventana){
+        glfwSetKeyCallback(ventana, VoidPlayer::PlayerInput);
         glfwSetFramebufferSizeCallback(ventana,MainViewport);
         glfwMakeContextCurrent(ventana);
         VoidChunk Chunk;
