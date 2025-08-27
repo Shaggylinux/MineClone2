@@ -1,4 +1,5 @@
-#include <cstdlib>
+#include <cmath>
+#include <glm/ext/matrix_transform.hpp>
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -10,7 +11,7 @@
 #include "stb_image.h"
 
 void MainViewport(GLFWwindow *ventana, int w, int h){
-    glViewport(0, -64, w, h);
+    glViewport(0, 0, w, h);
 }
 
 class VoidPlayer{
@@ -19,42 +20,44 @@ class VoidPlayer{
             float x, y , z;
         };
         float velocity;
-        float rotation;
+        static float rotation;
         glm::vec3 CameraPos = glm::vec3(0.f, 0.f, 3.f);
+        glm::vec3 CameraTarget = glm::vec3(0.f, 0.f, 0.f);
+        glm::vec3 CameraDirection = glm::normalize(CameraPos - CameraTarget);
         glm::vec3 CameraFront = glm::vec3(0.f, 0.f, -1.f);
-        glm::vec3 CameraUP = glm::vec3(0.f, 1.f, 0.f);
-        glm::mat4 view = glm::lookAt(
-            CameraPos,
-            CameraPos + CameraFront,
-            CameraUP
-        );
+        glm::vec3 CameraUP = glm::cross(CameraDirection, CameraRight);
+        glm::vec3 CameraRight = glm::normalize(glm::cross(CameraUP, CameraDirection));
+        static glm::mat4 view;
+
+        static float camX;
+        static float camY;
     public:
         VoidPlayer() = default;
         
-        static void PlayerInput(GLFWwindow *ventana, int key, int scancode, int action, int mods){
-            switch (key) {
-                case GLFW_KEY_W:
-                    puts("W");
-                    break;
-                case GLFW_KEY_A:
-                    puts("A");
-                    break;
-                case GLFW_KEY_S:
-                    puts("S");
-                    break;
-                case GLFW_KEY_D:
-                    puts("D");
-                    break;
-                case GLFW_KEY_SPACE:
-                    puts("ESPACIO");
-                    break;
-                case GLFW_KEY_ESCAPE:
-                    puts("Cerrar juego");
-                    glfwTerminate();
-                    break;
-            }
+        static void PlayerInput(){
+            camX = sin(glfwGetTime()) * 10.0f;
+            camY = cos(glfwGetTime()) * 10.0f;
+            view = glm::lookAt(glm::vec3(camX, 0.0f, camY), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
+            printf("HOLA");
+            glMatrixMode(GL_MODELVIEW);
+            glLoadMatrixf(&view[0][0]);
+
+            glm::mat4 projection = glm::perspective(
+            glm::radians(45.0f),
+            300.0f / 600.0f,
+            0.1f,
+            100.0f
+        );
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixf(&projection[0][0]);
+        glMatrixMode(GL_MODELVIEW);
         }
 };
+
+float VoidPlayer::rotation = 10.0f;
+float VoidPlayer::camX = sin(glfwGetTime()) * 10.0f;
+float VoidPlayer::camY = cos(glfwGetTime()) * 10.0f;
+glm::mat4 VoidPlayer::view = glm::lookAt(glm::vec3(VoidPlayer::camX, 0.f, VoidPlayer::camY), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 class VoidCube{
     private:
@@ -185,10 +188,12 @@ int main(){
     GLFWwindow *ventana = glfwCreateWindow(300, 600, "Test", NULL, NULL);
     
     if(ventana){
-        glfwSetKeyCallback(ventana, VoidPlayer::PlayerInput);
+        // glfwSetKeyCallback(ventana, VoidPlayer::PlayerInput);
         glfwSetFramebufferSizeCallback(ventana,MainViewport);
         glfwMakeContextCurrent(ventana);
         VoidChunk Chunk;
+        VoidPlayer Player;
+
         while(!glfwWindowShouldClose(ventana)){
             glClearColor(1.0f, 0.5f, 0.3f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -199,6 +204,7 @@ int main(){
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
             Chunk.LoadChunk();
+            Player.PlayerInput();
             
             glfwSwapBuffers(ventana);
             glfwPollEvents();
