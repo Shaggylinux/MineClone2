@@ -65,11 +65,7 @@ class VoidCube{
         };
         
         std::vector<Coordenadas> Cube;
-        std::vector<float> TexCoords
-            {1.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 0.0f,
-            0.0f, 1.0f};
+        std::vector<Coordenadas> TexCoords;
     public:
         VoidCube(){
             Cube = {
@@ -107,6 +103,13 @@ class VoidCube{
             {1.0f, 1.0f, 1.0f},
             {1.0f, -1.0f, 1.0f},
             {1.0f, -1.0f, -1.0f}
+            }, TexCoords ={
+             {1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f},
+             {1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f},
+             {1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f},
+            {1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f},
+            {1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f},
+            {1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f}
             };
         };
 
@@ -143,7 +146,7 @@ class VoidCube{
             glTranslatef(x, y, z);
             glBegin(GL_QUADS);
             for(int i{0} ; i < Cube.size() ; i++) {
-                glTexCoord2f(TexCoords[i % 4 * 2], TexCoords[i % 4 * 2 + 1]);
+                glTexCoord2f(TexCoords[i].x, TexCoords[i].y);
                 glVertex3f(Cube[i].x / 9,Cube[i].y / 9, Cube[i].z / 9);
             };
             
@@ -169,7 +172,7 @@ class VoidChunk{
             for(float x{0} ; x < 16 ; x++)
                 for(float y{0} ; y < 16 ; y++)
                     for(float z{0} ; z < 16 ; z++)
-                        if(y <= 3) Cube.ShowCube(x / 4.5f, y / 4.5f, z / 4.5f, DirtTexture);
+                        if(y <= 14) Cube.ShowCube(x / 4.5f, y / 4.5f, z / 4.5f, DirtTexture);
                         else Cube.ShowCube(x / 4.5f, y / 4.5f, z / 4.5f, GrassTexture);
             glPopMatrix();
         }
@@ -184,7 +187,7 @@ int main(){
         return EXIT_FAILURE;
     };
 
-    GLFWwindow *ventana = glfwCreateWindow(300, 600, "Test", NULL, NULL);
+    GLFWwindow *ventana = glfwCreateWindow(800, 800, "Test", NULL, NULL);
     
     if(ventana){
         // glfwSetKeyCallback(ventana, VoidPlayer::PlayerInput);
