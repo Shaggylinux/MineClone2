@@ -112,6 +112,8 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-3.31/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake"
   "/usr/share/cmake-3.31/Modules/Compiler/zOS-C-DetermineCompiler.cmake"
   "/usr/share/cmake-3.31/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.31/Modules/FindFontconfig.cmake"
+  "/usr/share/cmake-3.31/Modules/FindFreetype.cmake"
   "/usr/share/cmake-3.31/Modules/FindOpenGL.cmake"
   "/usr/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake"
   "/usr/share/cmake-3.31/Modules/FindPackageMessage.cmake"
@@ -139,6 +141,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-3.31/Modules/Platform/Linux-Initialize.cmake"
   "/usr/share/cmake-3.31/Modules/Platform/Linux.cmake"
   "/usr/share/cmake-3.31/Modules/Platform/UnixPaths.cmake"
+  "/usr/share/cmake-3.31/Modules/SelectLibraryConfigurations.cmake"
   "/usr/share/cmake-3.31/Modules/WriteBasicConfigVersionFile.cmake"
   )
 
